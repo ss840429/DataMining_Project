@@ -24,14 +24,15 @@ ph      = dataSet['pH']
 alcohol = dataSet['alcohol']
 
 
-
 for idx, (d, p, a) in enumerate(zip(density, ph, alcohol)) :			## Change density, ph and alcohol to class 0 or 1 
 
 	density[idx] = False if d < 0.995 else True 
 	ph[idx] 	 = False if p < 3 	  else True	
 	alcohol[idx] = False if a < 9 	  else True
 
-
+test['density'] = test['density'].astype(numpy.int64)
+test['pH'] = test['pH'].astype(numpy.int64)
+test['alcohol'] = test['alcohol'].astype(numpy.int64)
 
 dataSet.to_csv('wineQuality_Class2.csv', index=False)
 dataSet[:rows].to_csv('wineQuality_Class2_Train.csv', index=False)
