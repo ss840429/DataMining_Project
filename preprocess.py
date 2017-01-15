@@ -1,4 +1,5 @@
 import pandas
+import numpy
 
 
 dataSet = pandas.read_csv('wineQuality.csv')
@@ -30,9 +31,9 @@ for idx, (d, p, a) in enumerate(zip(density, ph, alcohol)) :			## Change density
 	ph[idx] 	 = False if p < 3 	  else True	
 	alcohol[idx] = False if a < 9 	  else True
 
-test['density'] = test['density'].astype(numpy.int64)
-test['pH'] = test['pH'].astype(numpy.int64)
-test['alcohol'] = test['alcohol'].astype(numpy.int64)
+dataSet['density'] = dataSet['density'].astype(numpy.int64)
+dataSet['pH'] = dataSet['pH'].astype(numpy.int64)
+dataSet['alcohol'] = dataSet['alcohol'].astype(numpy.int64)
 
 dataSet.to_csv('wineQuality_Class2.csv', index=False)
 dataSet[:rows].to_csv('wineQuality_Class2_Train.csv', index=False)
