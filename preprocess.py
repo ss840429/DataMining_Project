@@ -15,9 +15,9 @@ for idx, q in enumerate(quality) :		## Change quality to class 0 or 1 ( Not good
 		quality[idx] = 1
 
 
-dataSet.to_csv('wineQuality_Class1.csv')
-dataSet[:rows].to_csv('wineQuality_Class1_Train.csv')
-dataSet[rows:].to_csv('wineQuality_Class1_Test.csv')
+dataSet.to_csv('wineQuality_Class1.csv', index=False)
+dataSet[:rows].to_csv('wineQuality_Class1_Train.csv', index=False)
+dataSet[rows:].to_csv('wineQuality_Class1_Test.csv', index=False)
 
 density = dataSet['density']
 
@@ -50,9 +50,9 @@ for idx, a in enumerate(alcohol) :			## Change alcohol to class 0 or 1 ( weak or
 		alcohol[idx] = 1
 
 
-dataSet.to_csv('wineQuality_Class2.csv')
-dataSet[:rows].to_csv('wineQuality_Class2_Train.csv')
-dataSet[rows:].to_csv('wineQuality_Class2_Test.csv')
+dataSet.to_csv('wineQuality_Class2.csv', index=False)
+dataSet[:rows].to_csv('wineQuality_Class2_Train.csv', index=False)
+dataSet[rows:].to_csv('wineQuality_Class2_Test.csv', index=False)
 
 print(dataSet)
 
