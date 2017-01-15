@@ -15,7 +15,7 @@ for idx, q in enumerate(quality) :		## Change quality to class 0 or 1 ( Not good
 		quality[idx] = 1
 
 
-pandas.to_csv('wineQuality_Class1')
+dataSet.to_csv('wineQuality_Class1.csv')
 
 
 ph = dataSet['pH']
@@ -38,4 +38,6 @@ for idx, a in enumerate(alcohol) :			## Change alcohol to class 0 or 1 ( weak or
 		alcohol[idx] = 1
 
 
-pandas.to_csv('wineQuality_Class2')
+dataSet.to_csv('wineQuality_Class2.csv')
+
+print(dataSet)
