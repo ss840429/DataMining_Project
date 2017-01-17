@@ -14,6 +14,7 @@ class BayesClassifier:
 		self.attribute_name = list(self.train)
 		self.attribute_name.remove('quality')
 		self.pA = []
+		self.confusion_matrix = {}
 
 	def normalDistribution(self, attribute_name, testdata):
 		fmean = self.train[self.train['quality']==0][attribute_name].mean()
@@ -43,12 +44,12 @@ class BayesClassifier:
 
 	def predict(self, test_set, m_estimate = None):
 		test = pandas.read_csv(test_set)
-		confusion_matrix = { 'TP' : 0, 'TN' : 0, 'FP' : 0, 'FN' : 0 }
+		self.confusion_matrix = { 'TP' : 0, 'TN' : 0, 'FP' : 0, 'FN' : 0 }
 		self.pA = []
 		print(self.attribute_name)
 		for idx, row in test.iterrows():
-			positive = len(self.train[self.train['quality']==1].index)/self.train_rows
-			negative = len(self.train[self.train['quality']==0].index)/self.train_rows
+			positive = len(self.train[self.train['quality']==1].index)/self.train_rows			## P(X|NO )P(NO )
+			negative = len(self.train[self.train['quality']==0].index)/self.train_rows			## P(X|YES)P(YES)
 
 			for attr in self.attribute_name:
 				if test[attr].dtype == np.float64:
@@ -61,19 +62,22 @@ class BayesClassifier:
 
 			if positive > negative:
 				if row.get('quality') == 1:
-					confusion_matrix['TP'] += 1
+					self.confusion_matrix['TP'] += 1
 				else:
-					confusion_matrix['FP'] += 1
+					self.confusion_matrix['FP'] += 1
 			else:
 				if row.get('quality') == 1:
-					confusion_matrix['FN'] += 1
+					self.confusion_matrix['FN'] += 1
 				else:
-					confusion_matrix['TN'] += 1
+					self.confusion_matrix['TN'] += 1
 
-			self.pA.append(positive)
+			self.pA.append((positive, row.get('quality')))
+		
+		self.pA = sorted(self.pA, key = lambda x : x[0]) 	# Sort by positive 	
 		print(self.pA)
 
-			
+	def showConfusionMatrix(self):
+		pass		
 
 	def plotROC(self):
 		pass
