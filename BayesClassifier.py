@@ -12,6 +12,7 @@ class BayesClassifier:
 		self.train = pandas.read_csv(train_set)
 		self.train_rows = len(self.train.index)
 		self.attribute_name = list(self.train)
+		self.attribute_name.remove('quality')
 		self.pA = []
 
 	def normalDistribution(self, attribute_name, testdata):
@@ -37,19 +38,19 @@ class BayesClassifier:
 		tcount = ttotal[ttotal[attribute_name]==testdata.get(attribute_name)]
 
 		tp = len(tcount.index)/len(ttotal.index)
-		
+
 		return fp, tp
 
 	def predict(self, test_set, m_estimate = None):
 		test = pandas.read_csv(test_set)
 		confusion_matrix = { 'TP' : 0, 'TN' : 0, 'FP' : 0, 'FN' : 0 }
 		self.pA = []
-		
+		print(self.attribute_name)
 		for idx, row in test.iterrows():
 			positive = len(self.train[self.train['quality']==1].index)/self.train_rows
 			negative = len(self.train[self.train['quality']==0].index)/self.train_rows
 
-			for attr in test:
+			for attr in self.attribute_name:
 				if test[attr].dtype == np.float64:
 					fp, tp = self.normalDistribution(attr, row)
 				else:
@@ -70,6 +71,8 @@ class BayesClassifier:
 					confusion_matrix['TN'] += 1
 
 			self.pA.append(positive)
+		print(self.pA)
+
 			
 
 	def plotROC(self):
