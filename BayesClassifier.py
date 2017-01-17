@@ -30,28 +30,35 @@ class BayesClassifier:
 
 		return fp, tp		
 
-	def discreteDistribution(self, attribute_name, testdata, m_estimate = None):
+	def discreteDistribution(self, attribute_name, testdata, m_estimate = None, m = 3):
 		ftotal = self.train[self.train['quality']==0]
 		fcount = ftotal[ftotal[attribute_name]==testdata.get(attribute_name)]
 
-		fp = len(fcount.index)/len(ftotal.index)
+		if m_estimate :
+			fp = (len(fcount.index)+m*len(ftotal.index)/self.train_rows)/(len(ftotal.index)+m) 
+		else :
+			fp = len(fcount.index)/len(ftotal.index)
 		
 		ttotal = self.train[self.train['quality']==1]
 		tcount = ttotal[ttotal[attribute_name]==testdata.get(attribute_name)]
 
-		tp = len(tcount.index)/len(ttotal.index)
+		if m_estimate :
+			tp = (len(tcount.index)+m*len(ttotal.index)/self.train_rows)/(len(ttotal.index)+m) 
+		else :
+			tp = len(tcount.index)/len(ttotal.index)
 
 		return fp, tp
 
 	def predict(self, test_set, m_estimate = None):
 		test = pandas.read_csv(test_set)
-		# test = test[:800]
+		test = test[:800]
 		self.confusion_matrix = { 'TP' : 0, 'TN' : 0, 'FP' : 0, 'FN' : 0 }
 		self.pA = []
 		print(self.attribute_name)
+
 		for idx, row in test.iterrows():
-			positive = len(self.train[self.train['quality']==1].index)/self.train_rows			## P(X|NO )P(NO )
-			negative = len(self.train[self.train['quality']==0].index)/self.train_rows			## P(X|YES)P(YES)
+			positive = len(self.train[self.train['quality']==1].index)/self.train_rows			## P(X|NO )P(NO )/P(X)
+			negative = len(self.train[self.train['quality']==0].index)/self.train_rows			## P(X|YES)P(YES)/P(X)
 
 			for attr in self.attribute_name:
 				if test[attr].dtype == np.float64:
@@ -73,19 +80,19 @@ class BayesClassifier:
 				else:
 					self.confusion_matrix['TN'] += 1
 
-			self.pA.append((positive, row.get('quality')))
+			self.pA.append((negative, row.get('quality')))
 		
 		self.pA = sorted(self.pA, key = lambda x : x[0]) 	# Sort by positive 	
 		print(self.pA)
 
 	def showConfusionMatrix(self):
-		print( '--------------------------------' )
-		print( '|R \ P|     +     |     -      |' )
-		print( '--------------------------------' )
-		print( '|  +  |    {:-3d}    |    {:-3d}     |'.format(self.confusion_matrix['TP'], self.confusion_matrix['FN']) )
-		print( '--------------------------------' )
-		print( '|  -  |    {:-3d}    |    {:-3d}     |'.format(self.confusion_matrix['FP'], self.confusion_matrix['TN']) )
-		print( '--------------------------------' )
+		print( '----------------------------' )
+		print( '|R \ P|    +    |    -     |' )
+		print( '----------------------------' )
+		print( '|  +  |   {:-3d}   |   {:-3d}    |'.format(self.confusion_matrix['TP'], self.confusion_matrix['FN']) )
+		print( '----------------------------' )
+		print( '|  -  |   {:-3d}   |   {:-3d}    |'.format(self.confusion_matrix['FP'], self.confusion_matrix['TN']) )
+		print( '----------------------------' )
 
 		precision = self.confusion_matrix['TP'] / (self.confusion_matrix['TP']+self.confusion_matrix['FP'])
 		recall    = self.confusion_matrix['TP'] / (self.confusion_matrix['TP']+self.confusion_matrix['FN'])
@@ -94,7 +101,7 @@ class BayesClassifier:
 		print()
 		print( 'precision : {}'.format(precision))
 		print( 'recall    : {}'.format(recall))
-		print( 'F-measure : {}'.format(fmeasure))
+		print( 'F1-measure : {}'.format(fmeasure))
 
 	def plotROC(self):
 		
@@ -117,25 +124,18 @@ class BayesClassifier:
 			FPR.append(fpr)
 
 		plt.title('ROC Curve')
-		plt.xlabel( 'FPR' )
-		plt.ylabel( 'TPR' )
-		plt.plot(FPR, TPR, color='red', label='Real')
+		plt.xlabel('FPR')
+		plt.ylabel('TPR')
+		plt.plot(FPR, TPR, 'r', label='Real')
 		plt.plot([0,1], [0,1], label='Random')
 		plt.show()
 
 		# pass
 
 
-
-
-
-bf = BayesClassifier('wineQuality_Class1.csv')
-bf.predict('wineQuality_Class1_Train.csv', m_estimate = None)
+bf = BayesClassifier('wineQuality_Class1_Train.csv')
+bf.predict('wineQuality_Class1_Test.csv', m_estimate = False)
 bf.showConfusionMatrix()
 bf.plotROC()
-
-# bg.predict('wineQuality_Class1_Test.csv', m_estimate = True)
-# bf.showConfusionMatrix()
-# bf.plotROC()
 
 
