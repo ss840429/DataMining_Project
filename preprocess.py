@@ -17,8 +17,6 @@ for idx, q in enumerate(quality) :		## Change quality to class 0 or 1 ( Not good
 
 
 dataSet.to_csv('wineQuality_Class1.csv', index=False)
-dataSet[:rows].to_csv('wineQuality_Class1_Train.csv', index=False)
-dataSet[rows:].to_csv('wineQuality_Class1_Test.csv', index=False)
 
 density = dataSet['density']
 ph      = dataSet['pH']
@@ -36,8 +34,6 @@ dataSet['pH'] = dataSet['pH'].astype(numpy.int64)
 dataSet['alcohol'] = dataSet['alcohol'].astype(numpy.int64)
 
 dataSet.to_csv('wineQuality_Class2.csv', index=False)
-dataSet[:rows].to_csv('wineQuality_Class2_Train.csv', index=False)
-dataSet[rows:].to_csv('wineQuality_Class2_Test.csv', index=False)
 
 print(dataSet)
 
