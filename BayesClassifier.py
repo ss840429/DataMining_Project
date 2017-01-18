@@ -95,13 +95,16 @@ class BayesClassifier:
 		print( '|  -  |   {:-3d}   |   {:-3d}    |'.format(self.confusion_matrix['FP'], self.confusion_matrix['TN']) )
 		print( '----------------------------' )
 
+		total = self.confusion_matrix['TP'] + self.confusion_matrix['TN'] + self.confusion_matrix['FP'] + self.confusion_matrix['FN']
+		error_rate = (self.confusion_matrix['FP'] + self.confusion_matrix['FN'])/total
 		precision = self.confusion_matrix['TP'] / (self.confusion_matrix['TP']+self.confusion_matrix['FP'])
 		recall    = self.confusion_matrix['TP'] / (self.confusion_matrix['TP']+self.confusion_matrix['FN'])
 		fmeasure = 2*precision*recall / (precision+recall)
 
 		print()
-		print( 'precision : {}'.format(precision))
-		print( 'recall    : {}'.format(recall))
+		print( 'Error rate : {}'.format(error_rate))
+		print( 'precision  : {}'.format(precision))
+		print( 'recall     : {}'.format(recall))
 		print( 'F1-measure : {}'.format(fmeasure))
 
 	def plotROC(self):
@@ -135,7 +138,7 @@ class BayesClassifier:
 
 
 bf = BayesClassifier('wineQuality_Class1.csv', predict_class = 'quality' )
-bf.predict('wineQuality_Class1_Test.csv', m_estimate = False)
+bf.predict('wineQuality_Class1.csv', m_estimate = False)
 bf.showConfusionMatrix()
 bf.plotROC()
 
