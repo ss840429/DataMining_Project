@@ -52,7 +52,8 @@ class BayesClassifier:
 
 	def predict(self, test_filename, m_estimate = None):
 		test = pandas.read_csv(test_filename)
-		test = test[:800]
+		# test = test[:800]
+		test = test.sample(n=800)		## Sampling
 		self.confusion_matrix = { 'TP' : 0, 'TN' : 0, 'FP' : 0, 'FN' : 0 }
 		self.pA = []
 		print(self.attribute_name)
