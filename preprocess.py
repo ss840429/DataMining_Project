@@ -19,19 +19,16 @@ for idx, q in enumerate(quality) :		## Change quality to class 0 or 1 ( Not good
 dataSet.to_csv('wineQuality_Class1.csv', index=False)
 
 density = dataSet['density']
-ph      = dataSet['pH']
-alcohol = dataSet['alcohol']
+chlorides = dataSet['chlorides']
+volatile = dataSet['volatile acidity']
 
 
-for idx, (d, p, a) in enumerate(zip(density, ph, alcohol)) :			## Change density, ph and alcohol to class 0 or 1 
+for idx, (d, p, a) in enumerate(zip(density, chlorides, volatile)) :			## Normalize 
 
-	density[idx] = False if d < 0.995 else True 
-	ph[idx] 	 = False if p < 3 	  else True	
-	alcohol[idx] = False if a < 9 	  else True
+	density[idx] = (d - density.min()) / (density.max() - density.min())
+	chlorides[idx] 	 = (p - chlorides.min()) / (chlorides.max() - chlorides.min())
+	volatile[idx] = (a - volatile.min()) / (volatile.max() - volatile.min())
 
-dataSet['density'] = dataSet['density'].astype(numpy.int64)
-dataSet['pH'] = dataSet['pH'].astype(numpy.int64)
-dataSet['alcohol'] = dataSet['alcohol'].astype(numpy.int64)
 
 dataSet.to_csv('wineQuality_Class2.csv', index=False)
 
